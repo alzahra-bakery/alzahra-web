@@ -15,53 +15,63 @@
 <style>
   :root { --purple: #6A1B9A; --purple-light: #F3E5F5; --green: #25D366; --bg: #f7f7f9; --card: #ffffff; --text: #1a1a2e; --muted: #6b7280; --radius: 16px; }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; }
-  header { background: var(--purple); color: white; padding: 16px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
-  header h1 { margin: 0; font-size: 20px; }
-  header p { margin: 4px 0 0; font-size: 13px; opacity: 0.85; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 90px; font-size: 16px; }
+  header { background: var(--purple); color: white; padding: 18px 16px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+  header h1 { margin: 0; font-size: 23px; }
+  header p { margin: 5px 0 0; font-size: 15px; opacity: 0.85; }
   .container { padding: 12px; max-width: 600px; margin: 0 auto; }
-  .card { background: var(--card); border-radius: var(--radius); padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .card { background: var(--card); border-radius: var(--radius); padding: 15px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
   .category-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-  .category-header h3 { margin: 0; font-size: 17px; }
-  .category-header .count { font-size: 13px; color: var(--muted); }
-  .products { display: none; margin-top: 10px; }
+  .category-header h3 { margin: 0; font-size: 19px; }
+  .category-header .count { font-size: 14px; color: var(--muted); }
+  .products { display: none; margin-top: 12px; }
   .products.open { display: block; }
   .product { display: flex; gap: 10px; align-items: flex-start; padding: 12px 0; border-top: 1px solid #eee; }
   .product:first-child { border-top: none; }
   .product img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; background: var(--purple-light); flex-shrink: 0; }
   .product .info { flex: 1; min-width: 0; }
-  .product .info h4 { margin: 0 0 4px; font-size: 15px; }
-  .product .info .price { color: var(--purple); font-weight: bold; font-size: 15px; }
-  .product .cat-badge { display: inline-block; background: var(--purple-light); color: var(--purple); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 8px; margin-bottom: 4px; }
-  .product-actions { display: flex; align-items: center; gap: 6px; justify-content: flex-end; margin-top: 6px; }
-  .qty-mini { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--purple); background: white; color: var(--purple); font-size: 16px; font-weight: bold; cursor: pointer; padding: 0; line-height: 1; flex-shrink: 0; }
+  .product .info h4 { margin: 0 0 4px; font-size: 17px; }
+  .product .info .price { color: var(--purple); font-weight: bold; font-size: 17px; }
+  .product .cat-badge { display: inline-block; background: var(--purple-light); color: var(--purple); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 8px; margin-bottom: 4px; }
+  .product-actions { display: flex; align-items: center; gap: 6px; justify-content: flex-end; margin-top: 8px; flex-wrap: wrap; }
+  .qty-mini { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--purple); background: white; color: var(--purple); font-size: 18px; font-weight: bold; cursor: pointer; padding: 0; line-height: 1; flex-shrink: 0; }
   .qty-mini:disabled { border-color: #ddd; color: #ccc; }
-  .qty-display { min-width: 24px; text-align: center; font-weight: bold; font-size: 14px; }
-  .btn { background: var(--purple); color: white; border: none; border-radius: 10px; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .qty-display { min-width: 28px; text-align: center; font-weight: bold; font-size: 16px; }
+  .btn { background: var(--purple); color: white; border: none; border-radius: 10px; padding: 9px 16px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; display: inline-block; }
   .btn:disabled { background: #ccc; }
-  .btn-sm { padding: 6px 14px; font-size: 12px; }
+  .btn-sm { padding: 7px 14px; font-size: 13px; }
   .btn-green { background: var(--green); }
   .btn-outline { background: transparent; border: 1.5px solid var(--purple); color: var(--purple); }
-  .btn-block { width: 100%; padding: 14px; font-size: 16px; border-radius: 12px; }
-  .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+  .btn-block { width: 100%; padding: 15px; font-size: 17px; border-radius: 12px; }
+  .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
   .qty-controls { display: flex; align-items: center; gap: 8px; }
-  .qty-controls button { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--purple); background: white; color: var(--purple); font-size: 18px; font-weight: bold; cursor: pointer; }
-  .total-row { display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; margin: 12px 0; }
-  input, textarea, select { width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 16px; margin-bottom: 10px; font-family: inherit; background: white; }
+  .qty-controls button { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--purple); background: white; color: var(--purple); font-size: 19px; font-weight: bold; cursor: pointer; }
+  .total-row { display: flex; justify-content: space-between; font-size: 20px; font-weight: bold; margin: 14px 0; }
+  input, textarea, select { width: 100%; padding: 13px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 17px; margin-bottom: 10px; font-family: inherit; background: white; }
   input:focus, textarea:focus { outline: none; border-color: var(--purple); }
-  label { font-size: 14px; font-weight: 600; margin-bottom: 4px; display: block; }
+  label { font-size: 15px; font-weight: 600; margin-bottom: 5px; display: block; }
   .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; border-top: 1px solid #eee; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
-  .tab-bar button { flex: 1; background: none; border: none; padding: 10px 0 8px; font-size: 11px; color: var(--muted); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .tab-bar button { flex: 1; background: none; border: none; padding: 12px 0 10px; font-size: 12px; color: var(--muted); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: inherit; }
   .tab-bar button.active { color: var(--purple); font-weight: bold; }
-  .tab-bar button .icon { font-size: 20px; }
+  .tab-bar button .icon { font-size: 22px; }
   .hidden { display: none !important; }
-  .order-card { font-size: 14px; }
-  .order-item-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed #eee; font-size: 13px; gap: 8px; }
+  .order-card { font-size: 15px; }
+  .order-item-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px dashed #eee; font-size: 14px; gap: 8px; }
   .order-item-row:last-child { border-bottom: none; }
-  .order-cat-label { display: inline-block; background: var(--purple-light); color: var(--purple); font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 6px; margin-left: 4px; }
-  .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; font-size: 14px; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none; max-width: 90%; text-align: center; }
+  .order-cat-label { display: inline-block; background: var(--purple-light); color: var(--purple); font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 6px; margin-left: 4px; }
+  .order-num-badge { display: inline-block; background: var(--purple); color: white; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 10px; }
+  .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 22px; border-radius: 20px; font-size: 15px; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none; max-width: 90%; text-align: center; }
   .toast.show { opacity: 1; }
-  .empty { text-align: center; color: var(--muted); padding: 40px 0; }
+  .empty { text-align: center; color: var(--muted); padding: 40px 0; font-size: 15px; }
+  .pass-wrapper { position: relative; margin-bottom: 10px; }
+  .pass-wrapper input { padding-left: 80px; margin-bottom: 0; }
+  .pass-eye { position: absolute; left: 6px; top: 50%; transform: translateY(-50%); background: var(--purple-light); border: 1.5px solid var(--purple); border-radius: 8px; padding: 6px 10px; font-size: 14px; cursor: pointer; color: var(--purple); font-weight: bold; z-index: 10; font-family: inherit; }
+  .img-pick-btns { display: flex; gap: 4px; margin-bottom: 10px; flex-wrap: wrap; }
+  .img-pick-btns .btn { flex: 1; min-width: 70px; padding: 9px 6px; font-size: 12px; margin-bottom: 0; }
+  .img-preview-wrap { margin-bottom: 10px; }
+  .img-preview-wrap .img-box { position: relative; display: inline-block; }
+  .img-preview-wrap img { max-width: 100%; max-height: 160px; border-radius: 10px; border: 1.5px solid #ddd; }
+  .img-remove { position: absolute; top: 6px; left: 6px; background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 50%; width: 26px; height: 26px; font-size: 14px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -77,7 +87,7 @@
 </div>
 
 <div id="tab-cart" class="container hidden">
-  <h2 style="font-size:18px;">🛒 السلة</h2>
+  <h2 style="font-size:20px;">🛒 السلة</h2>
   <div id="cart-list"></div>
   <div id="empty-cart" class="empty hidden">السلة فارغة</div>
   <div id="cart-footer" class="hidden">
@@ -87,10 +97,10 @@
 </div>
 
 <div id="tab-checkout" class="container hidden">
-  <h2 style="font-size:18px;">📋 إتمام الطلب</h2>
+  <h2 style="font-size:20px;">📋 إتمام الطلب</h2>
 
   <div class="card">
-    <h3 style="color:var(--purple);margin-top:0;font-size:15px;">🛒 ملخص الطلب</h3>
+    <h3 style="color:var(--purple);margin-top:0;font-size:16px;">🛒 ملخص الطلب</h3>
     <div id="checkout-summary"></div>
   </div>
 
@@ -98,45 +108,49 @@
     <label>الاسم الكامل *</label>
     <input id="cust-name" placeholder="مثال: محمد العلمي">
     <label>رقم الهاتف *</label>
-    <input id="cust-phone" type="tel" placeholder="07XXXXXXXX">
+    <input id="cust-phone" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="07XXXXXXXX" oninput="enforceDigits(this, true)">
     <label>العنوان *</label>
     <textarea id="cust-address" rows="2" placeholder="الحي، الشارع، رقم المنزل..."></textarea>
     <button class="btn btn-outline" style="width:100%;margin-bottom:6px;" onclick="toggleMap()">🗺️ اختر موقعك على الخريطة</button>
     <div id="map-container" class="hidden" style="margin-bottom:10px;">
       <div id="map" style="height:250px; border-radius:12px; overflow:hidden; border:1.5px solid #ddd;"></div>
-      <p style="font-size:12px; color:var(--muted); margin:6px 0 6px; text-align:center;">انقر على الخريطة لوضع العلامة، أو استخدم موقعك الحالي</p>
-      <button type="button" class="btn btn-green" style="width:100%;padding:10px;font-size:14px;" onclick="locateMe()">📍 استخدم موقعي الحالي</button>
+      <p style="font-size:13px; color:var(--muted); margin:6px 0 6px; text-align:center;">انقر على الخريطة لوضع العلامة، أو استخدم موقعك الحالي</p>
+      <button type="button" class="btn btn-green" style="width:100%;padding:11px;font-size:15px;" onclick="locateMe()">📍 استخدم موقعي الحالي</button>
     </div>
     <label>ملاحظات إضافية للزون (اختياري)</label>
     <textarea id="cust-notes" rows="2" placeholder="أي تفاصيل إضافية..."></textarea>
   </div>
   <button class="btn btn-block" onclick="submitOrder()">✅ تأكيد الطلب</button>
   <div id="order-success" class="card hidden" style="text-align:center;margin-top:12px;">
-    <div style="font-size:40px;">✅</div>
+    <div style="font-size:44px;">✅</div>
     <h3>تم تسجيل طلبك</h3>
-    <button class="btn btn-green btn-block" style="margin-top:10px;" onclick="sendWhatsApp()">📲 إرسال الطلب عبر واتساب</button>
+    <div id="order-num-display" style="font-size:15px;color:var(--muted);margin-top:6px;"></div>
+    <button class="btn btn-green btn-block" style="margin-top:12px;" onclick="sendWhatsApp()">📲 إرسال الطلب عبر واتساب</button>
     <button class="btn btn-outline btn-block" style="margin-top:8px;" onclick="resetToShop()">العودة للمتجر</button>
   </div>
 </div>
 
 <div id="tab-admin" class="container hidden">
   <div id="admin-login">
-    <h2 style="font-size:18px;">🔐 لوحة الإدارة</h2>
+    <h2 style="font-size:20px;">🔐 لوحة الإدارة</h2>
     <div class="card">
       <label>كلمة المرور</label>
-      <input id="admin-pass" type="password" placeholder="admin123">
-      <button class="btn btn-block" onclick="adminLogin()">دخول</button>
+      <div class="pass-wrapper">
+        <input id="admin-pass" type="password" placeholder="admin123">
+        <button type="button" class="pass-eye" onclick="togglePassVisibility()">👁️ عرض</button>
+      </div>
+      <button class="btn btn-block" onclick="adminLogin()" style="margin-top:10px;">دخول</button>
     </div>
   </div>
 
   <div id="admin-panel" class="hidden">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-      <h2 style="font-size:18px;">⚙️ الإدارة</h2>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <h2 style="font-size:20px;">⚙️ الإدارة</h2>
       <button class="btn btn-outline" onclick="adminLogout()">خروج</button>
     </div>
 
     <div class="card">
-      <h3 style="color:var(--purple);margin-top:0;">➕ فقرة جديدة</h3>
+      <h3 style="color:var(--purple);margin-top:0;font-size:16px;">➕ فقرة جديدة</h3>
       <input id="new-cat-name" placeholder="اسم الفقرة (مثال: بيتزا)">
       <input id="new-cat-img" placeholder="رابط صورة الفقرة (اختياري)">
       <button class="btn btn-block" onclick="addCategory()">إضافة فقرة</button>
@@ -145,17 +159,38 @@
     <div id="admin-categories"></div>
 
     <div class="card">
-      <h3 style="color:var(--purple);margin-top:0;">📦 منتج جديد</h3>
+      <h3 style="color:var(--purple);margin-top:0;font-size:16px;">📦 منتج جديد</h3>
       <select id="prod-cat"></select>
       <input id="prod-name" placeholder="اسم المنتج">
-      <input id="prod-price" type="number" step="0.01" placeholder="السعر (د.ع)">
-      <input id="prod-qty" type="number" placeholder="الكمية (للمخزون)">
-      <input id="prod-img" placeholder="رابط صورة المنتج (اختياري)">
-      <button class="btn btn-block" onclick="addProduct()">إضافة منتج</button>
+      <input id="prod-price" type="tel" inputmode="decimal" placeholder="السعر (د.ع)" oninput="enforceDigits(this, false)">
+      <input id="prod-qty" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="الكمية (للمخزون)" oninput="enforceDigits(this, true)">
+
+      <label style="margin-top:6px;">صورة المنتج</label>
+      <div id="img-preview" class="img-preview-wrap"></div>
+
+      <div class="img-pick-btns">
+        <label class="btn btn-outline" style="text-align:center;position:relative;overflow:hidden;">
+          📷 كاميرا
+          <input type="file" accept="image/*" capture="environment" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" onchange="handleImagePick(event)">
+        </label>
+        <label class="btn btn-outline" style="text-align:center;position:relative;overflow:hidden;">
+          🖼️ استوديو
+          <input type="file" accept="image/*" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" onchange="handleImagePick(event)">
+        </label>
+        <label class="btn btn-outline" style="text-align:center;position:relative;overflow:hidden;">
+          📁 ملفات
+          <input type="file" accept="image/*" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" onchange="handleImagePick(event)">
+        </label>
+      </div>
+
+      <input type="url" id="img-url-input" placeholder="أو الصق رابط صورة (https://...)" style="margin-top:4px;">
+      <button type="button" class="btn btn-block btn-outline" onclick="applyImageUrl()" style="margin-bottom:10px;">🔗 استخدم هذا الرابط</button>
+
+      <button class="btn btn-block" onclick="addProduct()" style="margin-top:4px;">إضافة منتج</button>
     </div>
 
     <div class="card">
-      <h3 style="color:var(--purple);margin-top:0;">📨 الطلبات</h3>
+      <h3 style="color:var(--purple);margin-top:0;font-size:16px;">📨 الطلبات</h3>
       <div id="admin-orders"></div>
     </div>
   </div>
@@ -170,13 +205,19 @@
 <div id="toast" class="toast"></div>
 
 <script>
-let data = { categories: [], products: [], orders: [], cart: [] };
+let data = { categories: [], products: [], orders: [], cart: [], lastOrderNumber: 0 };
 const ADMIN_PASS = 'admin123';
+let _pendingProductImage = null;
 
 function load() {
   const saved = localStorage.getItem('alzahra_store');
   if (saved) { try { data = JSON.parse(saved); } catch(e) {} }
   if (!data.cart) data.cart = [];
+  if (typeof data.lastOrderNumber !== 'number') {
+    const sorted = [...(data.orders || [])].sort((a,b) => new Date(a.date) - new Date(b.date));
+    sorted.forEach((o, i) => { if (!o.orderNumber) o.orderNumber = i + 1; });
+    data.lastOrderNumber = (data.orders || []).length;
+  }
 }
 function save() { localStorage.setItem('alzahra_store', JSON.stringify(data)); }
 
@@ -184,10 +225,30 @@ function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 1500);
+  setTimeout(() => t.classList.remove('show'), 2000);
 }
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 function esc(s) { return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function enforceDigits(input, integerOnly) {
+  let v = input.value;
+  v = v.replace(/[٠-٩]/g, d => String.fromCharCode(d.charCodeAt(0) - 0x0660 + 48));
+  v = v.replace(/[۰-۹]/g, d => String.fromCharCode(d.charCodeAt(0) - 0x06F0 + 48));
+  v = integerOnly ? v.replace(/[^0-9]/g, '') : v.replace(/[^0-9.]/g, '');
+  if (input.value !== v) input.value = v;
+}
+
+function togglePassVisibility() {
+  const el = document.getElementById('admin-pass');
+  const btn = document.querySelector('.pass-eye');
+  if (el.type === 'password') {
+    el.type = 'text';
+    if (btn) btn.textContent = '🙈 إخفاء';
+  } else {
+    el.type = 'password';
+    if (btn) btn.textContent = '👁️ عرض';
+  }
+}
 
 function switchTab(tab) {
   ['shop','cart','checkout','admin'].forEach(t => {
@@ -217,16 +278,17 @@ function renderShop() {
       <div class="card">
         <div class="category-header" onclick="toggleProducts('${cat.id}')">
           <div><h3>${esc(cat.name)}</h3><span class="count">${prods.length} منتج</span></div>
-          <span style="color:var(--purple);font-size:20px;">▾</span>
+          <span style="color:var(--purple);font-size:22px;">▾</span>
         </div>
         <div class="products" id="prods-${cat.id}">
           ${prods.length === 0 ? '<p class="empty" style="padding:16px 0;">لا توجد منتجات في هذه الفقرة</p>' : prods.map(p => {
             const inCart = data.cart.find(c => c.productId === p.id);
             const inCartQty = inCart ? inCart.qty : 0;
             const available = p.qty - inCartQty;
+            const imgSrc = p.image ? esc(p.image) : '';
             return `
             <div class="product">
-              ${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" onerror="this.style.display='none'">` : `<div style="width:64px;height:64px;border-radius:12px;background:var(--purple-light);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">📦</div>`}
+              ${imgSrc ? `<img src="${imgSrc}" alt="${esc(p.name)}" onerror="this.style.display='none'">` : `<div style="width:64px;height:64px;border-radius:12px;background:var(--purple-light);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">📦</div>`}
               <div class="info">
                 <span class="cat-badge">📂 ${esc(cat.name)}</span>
                 <h4>${esc(p.name)}</h4>
@@ -259,11 +321,8 @@ function incShopQty(prodId) {
   const inCart = data.cart.find(c => c.productId === prodId);
   const inCartQty = inCart ? inCart.qty : 0;
   let current = parseInt(el.textContent) || 1;
-  if (current + inCartQty < p.qty) {
-    el.textContent = current + 1;
-  } else {
-    toast('الكمية المطلوبة تتجاوز المتوفر');
-  }
+  if (current + inCartQty < p.qty) el.textContent = current + 1;
+  else toast('الكمية المطلوبة تتجاوز المتوفر');
 }
 
 function decShopQty(prodId) {
@@ -277,32 +336,17 @@ function decShopQty(prodId) {
 function addToCart(prodId) {
   const p = data.products.find(x => x.id === prodId);
   if (!p || p.qty <= 0) return;
-
   const el = document.getElementById('shop-qty-' + prodId);
   const qty = el ? (parseInt(el.textContent) || 1) : 1;
-
   const cat = data.categories.find(c => c.id === p.categoryId);
   const categoryName = cat ? cat.name : '';
-
   const existing = data.cart.find(x => x.productId === prodId);
   const existingQty = existing ? existing.qty : 0;
-
-  if (existingQty + qty > p.qty) {
-    toast('الكمية المطلوبة تتجاوز المتوفر');
-    return;
-  }
-
-  if (existing) {
-    existing.qty += qty;
-    existing.categoryName = categoryName;
-  } else {
-    data.cart.push({ productId: prodId, qty: qty, categoryName: categoryName });
-  }
-
+  if (existingQty + qty > p.qty) { toast('الكمية المطلوبة تتجاوز المتوفر'); return; }
+  if (existing) { existing.qty += qty; existing.categoryName = categoryName; }
+  else data.cart.push({ productId: prodId, qty: qty, categoryName: categoryName });
   if (el) el.textContent = '1';
-  save();
-  updateCartBadge();
-  renderShop();
+  save(); updateCartBadge(); renderShop();
   toast('تمت إضافة ' + p.name + ' × ' + qty);
 }
 
@@ -317,13 +361,9 @@ function renderCart() {
   const empty = document.getElementById('empty-cart');
   const footer = document.getElementById('cart-footer');
   if (data.cart.length === 0) {
-    list.innerHTML = '';
-    empty.classList.remove('hidden');
-    footer.classList.add('hidden');
-    return;
+    list.innerHTML = ''; empty.classList.remove('hidden'); footer.classList.add('hidden'); return;
   }
-  empty.classList.add('hidden');
-  footer.classList.remove('hidden');
+  empty.classList.add('hidden'); footer.classList.remove('hidden');
   let total = 0;
   list.innerHTML = data.cart.map(item => {
     const p = data.products.find(x => x.id === item.productId);
@@ -336,11 +376,11 @@ function renderCart() {
         <div style="flex:1;min-width:0;">
           ${catName ? `<span class="cat-badge">📂 ${esc(catName)}</span>` : ''}
           <div><strong>${esc(p.name)}</strong></div>
-          <div style="font-size:13px;color:var(--muted);">${p.price.toFixed(2)} د.ع × ${item.qty}</div>
+          <div style="font-size:14px;color:var(--muted);">${p.price.toFixed(2)} د.ع × ${item.qty}</div>
         </div>
         <div class="qty-controls">
           <button onclick="decCart('${p.id}')">−</button>
-          <span>${item.qty}</span>
+          <span style="font-size:16px;font-weight:bold;">${item.qty}</span>
           <button onclick="incCart('${p.id}')">+</button>
         </div>
       </div>
@@ -364,30 +404,107 @@ function decCart(prodId) {
   save(); renderCart(); updateCartBadge();
 }
 
+// ============ الصور ============
+function resizeImage(file, maxSize = 500, quality = 0.7) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxSize || height > maxSize) {
+          if (width > height) { height = Math.round(height * maxSize / width); width = maxSize; }
+          else { width = Math.round(width * maxSize / height); height = maxSize; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function handleImagePick(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const preview = document.getElementById('img-preview');
+  preview.innerHTML = '<p style="color:var(--muted);font-size:14px;">⏳ جاري معالجة الصورة...</p>';
+  
+  const timeout = setTimeout(() => {
+    preview.innerHTML = '<p style="color:#e53935;font-size:14px;">استغرق المعالجة وقتًا طويلًا، جرّب صورة أصغر</p>';
+  }, 15000);
+  
+  resizeImage(file).then(dataUrl => {
+    clearTimeout(timeout);
+    _pendingProductImage = dataUrl;
+    preview.innerHTML = `
+      <div class="img-box">
+        <img src="${dataUrl}">
+        <button type="button" class="img-remove" onclick="clearPendingImage()">✕</button>
+      </div>
+    `;
+  }).catch((err) => {
+    clearTimeout(timeout);
+    console.error('Image error:', err);
+    preview.innerHTML = '<p style="color:#e53935;font-size:14px;">فشل تحميل الصورة. جرّب صورة أخرى أو استخدم رابط URL.</p>';
+  });
+  event.target.value = '';
+}
+
+function applyImageUrl() {
+  const input = document.getElementById('img-url-input');
+  const url = input.value.trim();
+  if (!url) { toast('الصق رابط الصورة أولًا'); return; }
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    toast('الرابط يجب أن يبدأ بـ https://');
+    return;
+  }
+  setPendingImageUrl(url);
+  input.value = '';
+  toast('تم تعيين الصورة');
+}
+
+function setPendingImageUrl(url) {
+  _pendingProductImage = url;
+  const preview = document.getElementById('img-preview');
+  preview.innerHTML = `
+    <div class="img-box">
+      <img src="${url}" onerror="this.parentElement.innerHTML='<p style=\\'color:#e53935;font-size:14px;\\'>الرابط غير صالح أو الصورة لا تُحمّل</p>'">
+      <button type="button" class="img-remove" onclick="clearPendingImage()">✕</button>
+    </div>
+  `;
+}
+
+function clearPendingImage() {
+  _pendingProductImage = null;
+  document.getElementById('img-preview').innerHTML = '';
+}
+
 // ============ الخريطة ============
 let map, marker, accuracyCircle;
 function toggleMap() {
   const cont = document.getElementById('map-container');
   cont.classList.toggle('hidden');
-  if (!map && !cont.classList.contains('hidden')) {
-    setTimeout(initMap, 100);
-  }
+  if (!map && !cont.classList.contains('hidden')) setTimeout(initMap, 100);
 }
 
 function initMap() {
   if (map) return;
   map = L.map('map').setView([33.3152, 44.3661], 12);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap',
-    maxZoom: 19
+    attribution: '© OpenStreetMap', maxZoom: 19
   }).addTo(map);
 
   map.on('click', function(e) {
     const lat = e.latlng.lat.toFixed(6);
     const lng = e.latlng.lng.toFixed(6);
-    if (marker) {
-      marker.setLatLng(e.latlng);
-    } else {
+    if (marker) marker.setLatLng(e.latlng);
+    else {
       marker = L.marker(e.latlng, { draggable: true }).addTo(map);
       marker.on('dragend', function() {
         const p = marker.getLatLng();
@@ -399,46 +516,28 @@ function initMap() {
 }
 
 function locateMe() {
-  if (!navigator.geolocation) {
-    toast('جهازك لا يدعم تحديد الموقع');
-    return;
-  }
+  if (!navigator.geolocation) { toast('جهازك لا يدعم تحديد الموقع'); return; }
   toast('جارٍ تحديد موقعك...');
   navigator.geolocation.getCurrentPosition(
     function(pos) {
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
-      const acc = pos.coords.accuracy;
-
+      const lat = pos.coords.latitude, lng = pos.coords.longitude, acc = pos.coords.accuracy;
       map.setView([lat, lng], 16);
-
-      if (marker) {
-        marker.setLatLng([lat, lng]);
-      } else {
+      if (marker) marker.setLatLng([lat, lng]);
+      else {
         marker = L.marker([lat, lng], { draggable: true }).addTo(map);
         marker.on('dragend', function() {
           const p = marker.getLatLng();
           document.getElementById('cust-address').value = `${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
         });
       }
-
       if (accuracyCircle) map.removeLayer(accuracyCircle);
-      accuracyCircle = L.circle([lat, lng], {
-        radius: acc,
-        color: '#6A1B9A',
-        fillColor: '#6A1B9A',
-        fillOpacity: 0.15
-      }).addTo(map);
-
+      accuracyCircle = L.circle([lat, lng], { radius: acc, color: '#6A1B9A', fillColor: '#6A1B9A', fillOpacity: 0.15 }).addTo(map);
       document.getElementById('cust-address').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
       toast('تم تحديد موقعك ✅');
     },
     function(err) {
-      if (err.code === 1) {
-        toast('اسمح بالوصول للموقع من إعدادات Safari');
-      } else {
-        toast('تعذّر تحديد الموقع، جرّب مرة أخرى');
-      }
+      if (err.code === 1) toast('اسمح بالوصول للموقع من إعدادات Safari');
+      else toast('تعذّر تحديد الموقع، جرّب مرة أخرى');
     },
     { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
   );
@@ -452,8 +551,7 @@ function renderCheckoutSummary() {
     el.innerHTML = '<p class="empty" style="padding:10px 0;">السلة فارغة</p>';
     return;
   }
-  let total = 0;
-  let html = '';
+  let total = 0, html = '';
   data.cart.forEach(item => {
     const p = data.products.find(x => x.id === item.productId);
     if (!p) return;
@@ -462,17 +560,12 @@ function renderCheckoutSummary() {
     total += p.price * item.qty;
     html += `
       <div class="order-item-row">
-        <div>
-          ${catName ? `<span class="order-cat-label">📂 ${esc(catName)}</span>` : ''}
-          <span>${esc(p.name)} × ${item.qty}</span>
-        </div>
+        <div>${catName ? `<span class="order-cat-label">📂 ${esc(catName)}</span>` : ''}<span>${esc(p.name)} × ${item.qty}</span></div>
         <span style="color:var(--purple);font-weight:bold;">${(p.price*item.qty).toFixed(2)} د.ع</span>
       </div>
     `;
   });
-  html += `<div style="display:flex;justify-content:space-between;border-top:1px solid #ddd;margin-top:8px;padding-top:8px;font-weight:bold;font-size:15px;">
-    <span>المجموع</span><span style="color:var(--purple);">${total.toFixed(2)} د.ع</span>
-  </div>`;
+  html += `<div style="display:flex;justify-content:space-between;border-top:1px solid #ddd;margin-top:10px;padding-top:10px;font-weight:bold;font-size:17px;"><span>المجموع</span><span style="color:var(--purple);">${total.toFixed(2)} د.ع</span></div>`;
   el.innerHTML = html;
 }
 
@@ -500,18 +593,20 @@ function submitOrder() {
     const cat = data.categories.find(c => c.id === p.categoryId);
     const categoryName = cat ? cat.name : (item.categoryName || '');
     total += p.price * item.qty;
-    return { name: p.name, price: p.price, qty: item.qty, categoryName: categoryName };
+    return { name: p.name, price: p.price, qty: item.qty, categoryName };
   }).filter(Boolean);
 
-  const order = { id: uid(), customer: name, phone, address, notes, items, total, date: new Date().toISOString() };
+  data.lastOrderNumber = (data.lastOrderNumber || 0) + 1;
+  const orderNumber = data.lastOrderNumber;
+
+  const order = { id: uid(), orderNumber, customer: name, phone, address, notes, items, total, date: new Date().toISOString() };
   data.orders.unshift(order);
   data.cart = [];
-  save();
-  updateCartBadge();
-  renderCart();
+  save(); updateCartBadge(); renderCart();
   window._lastOrder = order;
+  document.getElementById('order-num-display').textContent = `رقم طلبك: #${orderNumber}`;
   document.getElementById('order-success').classList.remove('hidden');
-  toast('تم تسجيل الطلب');
+  toast('تم تسجيل الطلب #' + orderNumber);
 }
 
 function getMapsLink(address) {
@@ -525,7 +620,7 @@ function sendWhatsApp() {
   const o = window._lastOrder;
   if (!o) return;
   const mapsLink = getMapsLink(o.address);
-  let msg = `*طلب جديد من متجر الزهراء*\n\n`;
+  let msg = `*طلب جديد #${o.orderNumber} - متجر الزهراء*\n\n`;
   msg += `👤 الاسم: ${o.customer}\n`;
   msg += `📞 الهاتف: ${o.phone}\n`;
   msg += `📍 العنوان:\n${mapsLink}\n`;
@@ -556,7 +651,7 @@ function adminLogin() {
     document.getElementById('admin-login').classList.add('hidden');
     document.getElementById('admin-panel').classList.remove('hidden');
     renderAdmin();
-  } else { toast('كلمة المرور خاطئة'); }
+  } else toast('كلمة المرور خاطئة');
 }
 function adminLogout() {
   sessionStorage.removeItem('alzahra_admin');
@@ -570,8 +665,8 @@ function renderAdmin() {
     ? '<p class="empty">لا توجد فقرات</p>'
     : data.categories.map(cat => `
       <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
-        <div><strong>${esc(cat.name)}</strong><div style="font-size:12px;color:var(--muted);">${data.products.filter(p => p.categoryId === cat.id).length} منتج</div></div>
-        <button class="btn" style="background:#e53935;padding:6px 10px;font-size:12px;" onclick="deleteCategory('${cat.id}')">حذف</button>
+        <div><strong>${esc(cat.name)}</strong><div style="font-size:13px;color:var(--muted);">${data.products.filter(p => p.categoryId === cat.id).length} منتج</div></div>
+        <button class="btn" style="background:#e53935;padding:7px 12px;font-size:13px;" onclick="deleteCategory('${cat.id}')">حذف</button>
       </div>
     `).join('');
 
@@ -585,45 +680,44 @@ function renderAdmin() {
     : data.orders.map(o => {
       const catsInOrder = [...new Set(o.items.map(i => i.categoryName).filter(Boolean))];
       const catsText = catsInOrder.length ? ' • 📂 ' + catsInOrder.join(' + ') : '';
+      const numBadge = o.orderNumber ? `<span class="order-num-badge">#${o.orderNumber}</span>` : '';
       return `
-      <div class="card order-card" style="padding:12px;">
+      <div class="card order-card" style="padding:13px;">
         <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="toggleOrder('${o.id}')">
           <div style="flex:1;">
-            <strong>${esc(o.customer)}</strong>
-            <div style="font-size:12px;color:var(--muted);">${esc(o.phone)} • ${o.items.length} منتج${catsText}</div>
+            ${numBadge}
+            <strong style="margin-right:6px;">${esc(o.customer)}</strong>
+            <div style="font-size:13px;color:var(--muted);margin-top:2px;">${esc(o.phone)} • ${o.items.length} منتج${catsText}</div>
           </div>
           <div style="text-align:left;">
             <span style="color:var(--purple);font-weight:bold;">${o.total.toFixed(2)} د.ع</span>
-            <div style="font-size:11px;color:var(--muted);">▼ اضغط للتفاصيل</div>
+            <div style="font-size:12px;color:var(--muted);">▼ اضغط للتفاصيل</div>
           </div>
         </div>
-        <div id="order-details-${o.id}" class="hidden" style="margin-top:10px;border-top:1px solid #eee;padding-top:10px;">
+        <div id="order-details-${o.id}" class="hidden" style="margin-top:12px;border-top:1px solid #eee;padding-top:12px;">
           <div style="display:flex;gap:6px;margin-bottom:8px;">
-            <a href="tel:${esc(o.phone)}" class="btn btn-outline" style="padding:8px 12px;font-size:12px;text-decoration:none;flex:1;text-align:center;">📞 اتصل</a>
-            <a href="https://wa.me/${esc(o.phone).replace(/[^0-9]/g,'')}" target="_blank" class="btn btn-green" style="padding:8px 12px;font-size:12px;text-decoration:none;flex:1;text-align:center;">💬 واتساب</a>
+            <a href="tel:${esc(o.phone)}" class="btn btn-outline" style="padding:9px 12px;font-size:13px;text-decoration:none;flex:1;text-align:center;">📞 اتصل</a>
+            <a href="https://wa.me/${esc(o.phone).replace(/[^0-9]/g,'')}" target="_blank" class="btn btn-green" style="padding:9px 12px;font-size:13px;text-decoration:none;flex:1;text-align:center;">💬 واتساب</a>
           </div>
-          <div style="font-size:13px;margin-bottom:8px;"><strong>العنوان:</strong> ${esc(o.address)}</div>
+          <div style="font-size:14px;margin-bottom:8px;"><strong>العنوان:</strong> ${esc(o.address)}</div>
           <div style="display:flex;gap:6px;margin-bottom:8px;">
-            <button class="btn btn-block" style="padding:10px;font-size:12px;" onclick="openOrderLocation('${o.id}')">🗺️ فتح</button>
-            <button class="btn btn-block btn-outline" style="padding:10px;font-size:12px;" onclick="shareLocation('${o.id}')">📤 مشاركة</button>
-            <button class="btn btn-block btn-green" style="padding:10px;font-size:12px;" onclick="sendLocationWA('${o.id}')">💬 واتساب</button>
+            <button class="btn btn-block" style="padding:10px;font-size:13px;" onclick="openOrderLocation('${o.id}')">🗺️ فتح</button>
+            <button class="btn btn-block btn-outline" style="padding:10px;font-size:13px;" onclick="shareLocation('${o.id}')">📤 مشاركة</button>
+            <button class="btn btn-block btn-green" style="padding:10px;font-size:13px;" onclick="sendLocationWA('${o.id}')">💬 واتساب</button>
           </div>
-          ${o.notes ? `<div style="font-size:13px;color:var(--muted);margin-bottom:8px;">📝 ${esc(o.notes)}</div>` : ''}
-          <div style="background:#f7f7f9;padding:10px;border-radius:10px;font-size:13px;margin-bottom:8px;">
+          ${o.notes ? `<div style="font-size:14px;color:var(--muted);margin-bottom:8px;">📝 ${esc(o.notes)}</div>` : ''}
+          <div style="background:#f7f7f9;padding:12px;border-radius:10px;font-size:14px;margin-bottom:8px;">
             <strong>🛒 المنتجات:</strong>
             ${o.items.map(it => `<div class="order-item-row">
-              <div>
-                ${it.categoryName ? `<span class="order-cat-label">📂 ${esc(it.categoryName)}</span>` : ''}
-                <span>${esc(it.name)} × ${it.qty}</span>
-              </div>
+              <div>${it.categoryName ? `<span class="order-cat-label">📂 ${esc(it.categoryName)}</span>` : ''}<span>${esc(it.name)} × ${it.qty}</span></div>
               <span style="color:var(--purple);font-weight:bold;">${(it.price*it.qty).toFixed(2)} د.ع</span>
             </div>`).join('')}
-            <div style="display:flex;justify-content:space-between;border-top:1px solid #ddd;margin-top:6px;padding-top:6px;font-weight:bold;">
+            <div style="display:flex;justify-content:space-between;border-top:1px solid #ddd;margin-top:8px;padding-top:8px;font-weight:bold;">
               <span>المجموع</span><span>${o.total.toFixed(2)} د.ع</span>
             </div>
           </div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">📅 ${new Date(o.date).toLocaleString('ar')}</div>
-          <button class="btn" style="background:#e53935;width:100%;padding:8px;font-size:12px;" onclick="deleteOrder('${o.id}')">🗑️ حذف الطلب</button>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">📅 ${new Date(o.date).toLocaleString('ar')}</div>
+          <button class="btn" style="background:#e53935;width:100%;padding:9px;font-size:13px;" onclick="deleteOrder('${o.id}')">🗑️ حذف الطلب</button>
         </div>
       </div>
       `;
@@ -649,16 +743,8 @@ async function shareLocation(id) {
   const link = getMapsLink(o.address);
   if (!link) { toast('لا يوجد عنوان'); return; }
   if (navigator.share) {
-    try {
-      await navigator.share({
-        title: 'موقع التوصيل',
-        text: 'موقع الزبون: ' + o.customer,
-        url: link
-      });
-    } catch(e) {}
-  } else {
-    window.open(link, '_blank');
-  }
+    try { await navigator.share({ title: 'موقع التوصيل', text: 'موقع الزبون: ' + o.customer, url: link }); } catch(e) {}
+  } else window.open(link, '_blank');
 }
 
 function sendLocationWA(id) {
@@ -672,17 +758,14 @@ function sendLocationWA(id) {
     let intl = phone;
     if (intl.startsWith('0')) intl = '964' + intl.slice(1);
     url = `https://wa.me/${intl}?text=${encodeURIComponent(link)}`;
-  } else {
-    url = `https://wa.me/?text=${encodeURIComponent(link)}`;
-  }
+  } else url = `https://wa.me/?text=${encodeURIComponent(link)}`;
   window.open(url, '_blank');
 }
 
 function deleteOrder(orderId) {
   if (!confirm('حذف هذا الطلب؟')) return;
   data.orders = data.orders.filter(o => o.id !== orderId);
-  save();
-  renderAdmin();
+  save(); renderAdmin();
   toast('تم حذف الطلب');
 }
 
@@ -694,8 +777,7 @@ function addCategory() {
   save();
   document.getElementById('new-cat-name').value = '';
   document.getElementById('new-cat-img').value = '';
-  renderAdmin();
-  renderShop();
+  renderAdmin(); renderShop();
   toast('تمت إضافة الفقرة');
 }
 
@@ -703,9 +785,7 @@ function deleteCategory(catId) {
   if (!confirm('حذف هذه الفقرة وكل منتجاتها؟')) return;
   data.categories = data.categories.filter(c => c.id !== catId);
   data.products = data.products.filter(p => p.categoryId !== catId);
-  save();
-  renderAdmin();
-  renderShop();
+  save(); renderAdmin(); renderShop();
   toast('تم حذف الفقرة');
 }
 
@@ -714,7 +794,7 @@ function addProduct() {
   const name = document.getElementById('prod-name').value.trim();
   const price = parseFloat(document.getElementById('prod-price').value);
   const qty = parseInt(document.getElementById('prod-qty').value);
-  const image = document.getElementById('prod-img').value.trim();
+  const image = _pendingProductImage || '';
 
   if (!catId) { toast('اختر الفقرة'); return; }
   if (!name) { toast('أدخل اسم المنتج'); return; }
@@ -726,9 +806,8 @@ function addProduct() {
   document.getElementById('prod-name').value = '';
   document.getElementById('prod-price').value = '';
   document.getElementById('prod-qty').value = '';
-  document.getElementById('prod-img').value = '';
-  renderAdmin();
-  renderShop();
+  clearPendingImage();
+  renderAdmin(); renderShop();
   toast('تمت إضافة المنتج');
 }
 
