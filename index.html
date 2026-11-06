@@ -296,7 +296,38 @@ function showCheckout() {
   switchTab('checkout');
   document.getElementById('order-success').classList.add('hidden');
 }
-function openMap() {
+let map, marker;
+function toggleMap() {
+  const cont = document.getElementById('map-container');
+  cont.classList.toggle('hidden');
+  if (!map && !cont.classList.contains('hidden')) {
+    setTimeout(initMap, 100);
+  }
+}
+
+function initMap() {
+  if (map) return;
+  map = L.map('map').setView([33.5228, -5.1106], 13); // إفران افتراضيًا
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap',
+    maxZoom: 19
+  }).addTo(map);
+
+  map.on('click', function(e) {
+    const lat = e.latlng.lat.toFixed(6);
+    const lng = e.latlng.lng.toFixed(6);
+    if (marker) {
+      marker.setLatLng(e.latlng);
+    } else {
+      marker = L.marker(e.latlng, { draggable: true }).addTo(map);
+      marker.on('dragend', function() {
+        const p = marker.getLatLng();
+        document.getElementById('cust-address').value = `${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+      });
+    }
+    document.getElementById('cust-address').value = `${lat}, ${lng}`;
+  });
+}
   const addr = document.getElementById('cust-address').value.trim() || 'Ifrane, Morocco';
   window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(addr), '_blank');
 }
