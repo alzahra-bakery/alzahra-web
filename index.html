@@ -327,7 +327,52 @@ function initMap() {
     document.getElementById('cust-address').value = `${lat}, ${lng}`;
   });
 }
+let accuracyCircle;
+function locateMe() {
+  if (!navigator.geolocation) {
+    toast('جهازك لا يدعم تحديد الموقع');
+    return;
+  }
+  toast('جارٍ تحديد موقعك...');
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      const acc = pos.coords.accuracy;
 
+      map.setView([lat, lng], 16);
+
+      if (marker) {
+        marker.setLatLng([lat, lng]);
+      } else {
+        marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+        marker.on('dragend', function() {
+          const p = marker.getLatLng();
+          document.getElementById('cust-address').value = `${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+        });
+      }
+
+      if (accuracyCircle) map.removeLayer(accuracyCircle);
+      accuracyCircle = L.circle([lat, lng], {
+        radius: acc,
+        color: '#6A1B9A',
+        fillColor: '#6A1B9A',
+        fillOpacity: 0.15
+      }).addTo(map);
+
+      document.getElementById('cust-address').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+      toast('تم تحديد موقعك ✅');
+    },
+    function(err) {
+      if (err.code === 1) {
+        toast('اسمح بالوصول للموقع من إعدادات Safari');
+      } else {
+        toast('تعذّر تحديد الموقع، جرّب مرة أخرى');
+      }
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+  );
+}
 function showCheckout() {
   if (data.cart.length === 0) { toast('السلة فارغة'); return; }
   switchTab('checkout');
