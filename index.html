@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>متجر الزهراء - إفران</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#6A1B9A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="الزهراء">
+<link rel="apple-touch-icon" href="./icon.svg">
+<style>
+  :root { --purple: #6A1B9A; --purple-light: #F3E5F5; --green: #25D366; --bg: #f7f7f9; --card: #ffffff; --text: #1a1a2e; --muted: #6b7280; --radius: 16px; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; }
+  header { background: var(--purple); color: white; padding: 16px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+  header h1 { margin: 0; font-size: 20px; }
+  header p { margin: 4px 0 0; font-size: 13px; opacity: 0.85; }
+  .container { padding: 12px; max-width: 600px; margin: 0 auto; }
+  .card { background: var(--card); border-radius: var(--radius); padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .category-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+  .category-header h3 { margin: 0; font-size: 17px; }
+  .category-header .count { font-size: 13px; color: var(--muted); }
+  .products { display: none; margin-top: 10px; }
+  .products.open { display: block; }
+  .product { display: flex; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid #eee; }
+  .product:first-child { border-top: none; }
+  .product img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; background: var(--purple-light); }
+  .product .info { flex: 1; }
+  .product .info h4 { margin: 0 0 4px; font-size: 15px; }
+  .product .info .price { color: var(--purple); font-weight: bold; font-size: 15px; }
+  .btn { background: var(--purple); color: white; border: none; border-radius: 10px; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .btn:disabled { background: #ccc; }
+  .btn-green { background: var(--green); }
+  .btn-outline { background: transparent; border: 1.5px solid var(--purple); color: var(--purple); }
+  .btn-block { width: 100%; padding: 14px; font-size: 16px; border-radius: 12px; }
+  .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+  .qty-controls { display: flex; align-items: center; gap: 10px; }
+  .qty-controls button { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--purple); background: white; color: var(--purple); font-size: 18px; font-weight: bold; cursor: pointer; }
+  .total-row { display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; margin: 12px 0; }
+  input, textarea, select { width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 16px; margin-bottom: 10px; font-family: inherit; background: white; }
+  input:focus, textarea:focus { outline: none; border-color: var(--purple); }
+  label { font-size: 14px; font-weight: 600; margin-bottom: 4px; display: block; }
+  .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; border-top: 1px solid #eee; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
+  .tab-bar button { flex: 1; background: none; border: none; padding: 10px 0 8px; font-size: 11px; color: var(--muted); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .tab-bar button.active { color: var(--purple); font-weight: bold; }
+  .tab-bar button .icon { font-size: 20px; }
+  .hidden { display: none !important; }
+  .order-card { font-size: 14px; }
+  .order-card .items { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; font-size: 14px; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+  .empty { text-align: center; color: var(--muted); padding: 40px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🛍️ متجر الزهراء</h1>
+  <p>إفران - تسوق بسهولة</p>
+</header>
+
+<div id="tab-shop" class="container">
+  <div id="categories-list"></div>
+  <div id="empty-shop" class="empty hidden">
+    لا توجد فقرات بعد.<br>اذهب إلى تبويب "الإدارة" لإضافة فقرات ومنتجات.
+  </div>
+</div>
+
+<div id="tab-cart" class="container hidden">
+  <h2 style="font-size:18px;">🛒 السلة</h2>
+  <div id="cart-list"></div>
+  <div id="empty-cart" class="empty hidden">السلة فارغة</div>
+  <div id="cart-footer" class="hidden">
+    <div class="total-row"><span>المجموع:</span><span id="cart-total">0.00 د.م</span></div>
+    <button class="btn btn-block" onclick="showCheckout()">متابعة الطلب</button>
+  </div>
+</div>
+
+<div id="tab-checkout" class="container hidden">
+  <h2 style="font-size:18px;">📋 إتمام الطلب</h2>
+  <div class="card">
+    <label>الاسم الكامل *</label>
+    <input id="cust-name" placeholder="مثال: محمد العلمي">
+    <label>رقم الهاتف *</label>
+    <input id="cust-phone" type="tel" placeholder="06XXXXXXXX">
+    <label>العنوان *</label>
+    <textarea id="cust-address" rows="2" placeholder="الحي، الشارع، رقم المنزل..."></textarea>
+    <button class="btn btn-outline" style="width:100%;margin-bottom:10px;" onclick="openMap()">🗺️ فتح العنوان على الخريطة</button>
+    <label>ملاحظات إضافية للزون (اختياري)</label>
+    <textarea id="cust-notes" rows="2" placeholder="أي تفاصيل إضافية..."></textarea>
+  </div>
+  <button class="btn btn-block" onclick="submitOrder()">✅ تأكيد الطلب</button>
+  <div id="order-success" class="card hidden" style="text-align:center;margin-top:12px;">
+    <div style="font-size:40px;">✅</div>
+    <h3>تم تسجيل طلبك</h3>
+    <button class="btn btn-green btn-block" style="margin-top:10px;" onclick="sendWhatsApp()">📲 إرسال الطلب عبر واتساب</button>
+    <button class="btn btn-outline btn-block" style="margin-top:8px;" onclick="resetToShop()">العودة للمتجر</button>
+  </div>
+</div>
+
+<div id="tab-admin" class="container hidden">
+  <div id="admin-login">
+    <h2 style="font-size:18px;">🔐 لوحة الإدارة</h2>
+    <div class="card">
+      <label>كلمة المرور</label>
+      <input id="admin-pass" type="password" placeholder="admin123">
+      <button class="btn btn-block" onclick="adminLogin()">دخول</button>
+    </div>
+  </div>
+
+  <div id="admin-panel" class="hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <h2 style="font-size:18px;">⚙️ الإدارة</h2>
+      <button class="btn btn-outline" onclick="adminLogout()">خروج</button>
+    </div>
+
+    <div class="card">
+      <h3 style="color:var(--purple);margin-top:0;">➕ فقرة جديدة</h3>
+      <input id="new-cat-name" placeholder="اسم الفقرة (مثال: مواد غذائية)">
+      <input id="new-cat-img" placeholder="رابط صورة الفقرة (اختياري)">
+      <button class="btn btn-block" onclick="addCategory()">إضافة فقرة</button>
+    </div>
+
+    <div id="admin-categories"></div>
+
+    <div class="card">
+      <h3 style="color:var(--purple);margin-top:0;">📦 منتج جديد</h3>
+      <select id="prod-cat"></select>
+      <input id="prod-name" placeholder="اسم المنتج">
+      <input id="prod-price" type="number" step="0.01" placeholder="السعر (د.م)">
+      <input id="prod-qty" type="number" placeholder="الكمية">
+      <input id="prod-img" placeholder="رابط صورة المنتج (اختياري)">
+      <button class="btn btn-block" onclick="addProduct()">إضافة منتج</button>
+    </div>
+
+    <div class="card">
+      <h3 style="color:var(--purple);margin-top:0;">📨 الطلبات</h3>
+      <div id="admin-orders"></div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <button id="nav-shop" class="active" onclick="switchTab('shop')"><span class="icon">🏪</span>المتجر</button>
+  <button id="nav-cart" onclick="switchTab('cart')"><span class="icon">🛒</span>السلة<span id="cart-badge" style="background:var(--purple);color:white;border-radius:10px;padding:0 6px;font-size:10px;margin-top:-8px;"></span></button>
+  <button id="nav-admin" onclick="switchTab('admin')"><span class="icon">⚙️</span>الإدارة</button>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+let data = { categories: [], products: [], orders: [], cart: [] };
+const ADMIN_PASS = 'admin123';
+
+function load() {
+  const saved = localStorage.getItem('alzahra_store');
+  if (saved) { try { data = JSON.parse(saved); } catch(e) {} }
+  if (!data.cart) data.cart = [];
+}
+function save() { localStorage.setItem('alzahra_store', JSON.stringify(data)); }
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1500);
+}
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+// ✅ الدالة المُصحّحة (تشمل checkout)
+function switchTab(tab) {
+  ['shop','cart','checkout','admin'].forEach(t => {
+    const el = document.getElementById('tab-'+t);
+    if (el) el.classList.toggle('hidden', t !== tab);
+    const nav = document.getElementById('nav-'+t);
+    if (nav) nav.classList.toggle('active', t === tab);
+  });
+  if (tab === 'cart') renderCart();
+  if (tab === 'admin') { if (isAdminLoggedIn()) renderAdmin(); }
+  if (tab === 'shop') renderShop();
+}
+
+function renderShop() {
+  const list = document.getElementById('categories-list');
+  const empty = document.getElementById('empty-shop');
+  if (data.categories.length === 0) {
+    list.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  list.innerHTML = data.categories.map(cat => {
+    const prods = data.products.filter(p => p.categoryId === cat.id);
+    return `
+      <div class="card">
+        <div class="category-header" onclick="toggleProducts('${cat.id}')">
+          <div><h3>${esc(cat.name)}</h3><span class="count">${prods.length} منتج</span></div>
+          <span style="color:var(--purple);font-size:20px;">▾</span>
+        </div>
+        <div class="products" id="prods-${cat.id}">
+          ${prods.length === 0 ? '<p class="empty" style="padding:16px 0;">لا توجد منتجات في هذه الفقرة</p>' : prods.map(p => `
+            <div class="product">
+              ${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" onerror="this.style.display='none'">` : `<div style="width:64px;height:64px;border-radius:12px;background:var(--purple-light);display:flex;align-items:center;justify-content:center;font-size:24px;">📦</div>`}
+              <div class="info">
+                <h4>${esc(p.name)}</h4>
+                <div class="price">${Number(p.price).toFixed(2)} د.م</div>
+              </div>
+              <button class="btn" onclick="addToCart('${p.id}')" ${p.qty <= 0 ? 'disabled' : ''}>أضف</button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleProducts(catId) {
+  const el = document.getElementById('prods-' + catId);
+  if (el) el.classList.toggle('open');
+}
+
+function addToCart(prodId) {
+  const p = data.products.find(x => x.id === prodId);
+  if (!p || p.qty <= 0) return;
+  const existing = data.cart.find(x => x.productId === prodId);
+  if (existing) {
+    if (existing.qty < p.qty) existing.qty++;
+    else { toast('الكمية المطلوبة تتجاوز المتوفر'); return; }
+  } else {
+    data.cart.push({ productId: prodId, qty: 1 });
+  }
+  save();
+  updateCartBadge();
+  toast('تمت إضافة ' + p.name);
+}
+
+function updateCartBadge() {
+  const total = data.cart.reduce((s,i) => s + i.qty, 0);
+  const badge = document.getElementById('cart-badge');
+  badge.textContent = total > 0 ? total : '';
+}
+
+function renderCart() {
+  const list = document.getElementById('cart-list');
+  const empty = document.getElementById('empty-cart');
+  const footer = document.getElementById('cart-footer');
+  if (data.cart.length === 0) {
+    list.innerHTML = '';
+    empty.classList.remove('hidden');
+    footer.classList.add('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  footer.classList.remove('hidden');
+  let total = 0;
+  list.innerHTML = data.cart.map(item => {
+    const p = data.products.find(x => x.id === item.productId);
+    if (!p) return '';
+    total += p.price * item.qty;
+    return `
+      <div class="card cart-item">
+        <div><strong>${esc(p.name)}</strong><div style="font-size:13px;color:var(--muted);">${p.price.toFixed(2)} د.م × ${item.qty}</div></div>
+        <div class="qty-controls">
+          <button onclick="decCart('${p.id}')">−</button>
+          <span>${item.qty}</span>
+          <button onclick="incCart('${p.id}')">+</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('cart-total').textContent = total.toFixed(2) + ' د.م';
+}
+
+function incCart(prodId) {
+  const item = data.cart.find(x => x.productId === prodId);
+  const p = data.products.find(x => x.id === prodId);
+  if (!item || !p) return;
+  if (item.qty < p.qty) { item.qty++; save(); renderCart(); updateCartBadge(); }
+  else toast('الكمية المطلوبة تتجاوز المتوفر');
+}
+function decCart(prodId) {
+  const idx = data.cart.findIndex(x => x.productId === prodId);
+  if (idx < 0) return;
+  data.cart[idx].qty--;
+  if (data.cart[idx].qty <= 0) data.cart.splice(idx, 1);
+  save(); renderCart(); updateCartBadge();
+}
+
+function showCheckout() {
+  if (data.cart.length === 0) { toast('السلة فارغة'); return; }
+  switchTab('checkout');
+  document.getElementById('order-success').classList.add('hidden');
+}
+function openMap() {
+  const addr = document.getElementById('cust-address').value.trim() || 'Ifrane, Morocco';
+  window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(addr), '_blank');
+}
+function submitOrder() {
+  const name = document.getElementById('cust-name').value.trim();
+  const phone = document.getElementById('cust-phone').value.trim();
+  const address = document.getElementById('cust-address').value.trim();
+  const notes = document.getElementById('cust-notes').value.trim();
+
+  if (!name) { toast('أدخل الاسم'); return; }
+  if (!phone || phone.length < 8) { toast('أدخل رقم هاتف صحيح'); return; }
+  if (!address) { toast('أدخل العنوان'); return; }
+
+  let total = 0;
+  const items = data.cart.map(item => {
+    const p = data.products.find(x => x.id === item.productId);
+    if (!p) return null;
+    total += p.price * item.qty;
+    return { name: p.name, price: p.price, qty: item.qty };
+  }).filter(Boolean);
+
+  const order = { id: uid(), customer: name, phone, address, notes, items, total, date: new Date().toISOString() };
+  data.orders.unshift(order);
+  data.cart = [];
+  save();
+  updateCartBadge();
+  renderCart();
+  window._lastOrder = order;
+  document.getElementById('order-success').classList.remove('hidden');
+  toast('تم تسجيل الطلب');
+}
+function sendWhatsApp() {
+  const o = window._lastOrder;
+  if (!o) return;
+  let msg = `*طلب جديد من متجر الزهراء*\n`;
+  msg += `الاسم: ${o.customer}\n`;
+  msg += `الهاتف: ${o.phone}\n`;
+  msg += `العنوان: ${o.address}\n`;
+  if (o.notes) msg += `ملاحظات: ${o.notes}\n`;
+  msg += `\n*المنتجات:*\n`;
+  o.items.forEach(i => { msg += `• ${i.name} × ${i.qty} = ${(i.price * i.qty).toFixed(2)} د.م\n`; });
+  msg += `\n*المجموع: ${o.total.toFixed(2)} د.م*`;
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+}
+function resetToShop() {
+  document.getElementById('cust-name').value = '';
+  document.getElementById('cust-phone').value = '';
+  document.getElementById('cust-address').value = '';
+  document.getElementById('cust-notes').value = '';
+  switchTab('shop');
+}
+
+function isAdminLoggedIn() { return sessionStorage.getItem('alzahra_admin') === '1'; }
+function adminLogin() {
+  const pass = document.getElementById('admin-pass').value;
+  if (pass === ADMIN_PASS) {
+    sessionStorage.setItem('alzahra_admin', '1');
+    document.getElementById('admin-login').classList.add('hidden');
+    document.getElementById('admin-panel').classList.remove('hidden');
+    renderAdmin();
+  } else { toast('كلمة المرور خاطئة'); }
+}
+function adminLogout() {
+  sessionStorage.removeItem('alzahra_admin');
+  document.getElementById('admin-login').classList.remove('hidden');
+  document.getElementById('admin-panel').classList.add('hidden');
+}
+
+function renderAdmin() {
+  const ac = document.getElementById('admin-categories');
+  ac.innerHTML = data.categories.length === 0
+    ? '<p class="empty">لا توجد فقرات</p>'
+    : data.categories.map(cat => `
+      <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
+        <div><strong>${esc(cat.name)}</strong><div style="font-size:12px;color:var(--muted);">${data.products.filter(p => p.categoryId === cat.id).length} منتج</div></div>
+        <button class="btn" style="background:#e53935;padding:6px 10px;font-size:12px;" onclick="deleteCategory('${cat.id}')">حذف</button>
+      </div>
+    `).join('');
+
+  const sel = document.getElementById('prod-cat');
+  sel.innerHTML = '<option value="">-- اختر الفقرة --</option>' +
+    data.categories.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+
+  const ao = document.getElementById('admin-orders');
+  ao.innerHTML = data.orders.length === 0
+    ? '<p class="empty">لا توجد طلبات بعد</p>'
+    : data.orders.map(o => `
+      <div class="card order-card">
+        <div style="display:flex;justify-content:space-between;"><strong>${esc(o.customer)}</strong><span style="color:var(--purple);font-weight:bold;">${o.total.toFixed(2)} د.م</span></div>
+        <div style="font-size:13px;color:var(--muted);">${esc(o.phone)}</div>
+        <div style="font-size:13px;">${esc(o.address)}</div>
+        ${o.notes ? `<div style="font-size:12px;color:var(--muted);">📝 ${esc(o.notes)}</div>` : ''}
+        <div class="items">${o.items.map(i => `${esc(i.name)} × ${i.qty}`).join(' • ')}</div>
+      </div>
+    `).join('');
+}
+
+function addCategory() {
+  const name = document.getElementById('new-cat-name').value.trim();
+  const image = document.getElementById('new-cat-img').value.trim();
+  if (!name) { toast('أدخل اسم الفقرة'); return; }
+  data.categories.push({ id: uid(), name, image });
+  save();
+  document.getElementById('new-cat-name').value = '';
+  document.getElementById('new-cat-img').value = '';
+  renderAdmin();
+  renderShop();
+  toast('تمت إضافة الفقرة');
+}
+
+function deleteCategory(catId) {
+  if (!confirm('حذف هذه الفقرة وكل منتجاتها؟')) return;
+  data.categories = data.categories.filter(c => c.id !== catId);
+  data.products = data.products.filter(p => p.categoryId !== catId);
+  save();
+  renderAdmin();
+  renderShop();
+  toast('تم حذف الفقرة');
+}
+
+function addProduct() {
+  const catId = document.getElementById('prod-cat').value;
+  const name = document.getElementById('prod-name').value.trim();
+  const price = parseFloat(document.getElementById('prod-price').value);
+  const qty = parseInt(document.getElementById('prod-qty').value);
+  const image = document.getElementById('prod-img').value.trim();
+
+  if (!catId) { toast('اختر الفقرة'); return; }
+  if (!name) { toast('أدخل اسم المنتج'); return; }
+  if (isNaN(price) || price < 0) { toast('أدخل سعرًا صحيحًا'); return; }
+  if (isNaN(qty) || qty < 0) { toast('أدخل كمية صحيحة'); return; }
+
+  data.products.push({ id: uid(), categoryId: catId, name, price, qty, image });
+  save();
+  document.getElementById('prod-name').value = '';
+  document.getElementById('prod-price').value = '';
+  document.getElementById('prod-qty').value = '';
+  document.getElementById('prod-img').value = '';
+  renderAdmin();
+  renderShop();
+  toast('تمت إضافة المنتج');
+}
+
+load();
+renderShop();
+updateCartBadge();
+if (isAdminLoggedIn()) {
+  document.getElementById('admin-login').classList.add('hidden');
+  document.getElementById('admin-panel').classList.remove('hidden');
+  renderAdmin();
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(console.error);
+  });
+}
+</script>
+
+</body>
+</html>
