@@ -1,0 +1,21 @@
+{
+  "name": "متجر الزهراء - إفران",
+  "short_name": "الزهراء",
+  "description": "تطبيق التسوق لمتجر الزهراء بإفران",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#6A1B9A",
+  "theme_color": "#6A1B9A",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
