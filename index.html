@@ -26,19 +26,25 @@
   .category-header .count { font-size: 13px; color: var(--muted); }
   .products { display: none; margin-top: 10px; }
   .products.open { display: block; }
-  .product { display: flex; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid #eee; }
+  .product { display: flex; gap: 10px; align-items: flex-start; padding: 12px 0; border-top: 1px solid #eee; }
   .product:first-child { border-top: none; }
-  .product img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; background: var(--purple-light); }
-  .product .info { flex: 1; }
+  .product img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; background: var(--purple-light); flex-shrink: 0; }
+  .product .info { flex: 1; min-width: 0; }
   .product .info h4 { margin: 0 0 4px; font-size: 15px; }
   .product .info .price { color: var(--purple); font-weight: bold; font-size: 15px; }
+  .product .cat-badge { display: inline-block; background: var(--purple-light); color: var(--purple); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 8px; margin-bottom: 4px; }
+  .product-actions { display: flex; align-items: center; gap: 6px; justify-content: flex-end; margin-top: 6px; }
+  .qty-mini { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--purple); background: white; color: var(--purple); font-size: 16px; font-weight: bold; cursor: pointer; padding: 0; line-height: 1; flex-shrink: 0; }
+  .qty-mini:disabled { border-color: #ddd; color: #ccc; }
+  .qty-display { min-width: 24px; text-align: center; font-weight: bold; font-size: 14px; }
   .btn { background: var(--purple); color: white; border: none; border-radius: 10px; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; }
   .btn:disabled { background: #ccc; }
+  .btn-sm { padding: 6px 14px; font-size: 12px; }
   .btn-green { background: var(--green); }
   .btn-outline { background: transparent; border: 1.5px solid var(--purple); color: var(--purple); }
   .btn-block { width: 100%; padding: 14px; font-size: 16px; border-radius: 12px; }
   .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
-  .qty-controls { display: flex; align-items: center; gap: 10px; }
+  .qty-controls { display: flex; align-items: center; gap: 8px; }
   .qty-controls button { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--purple); background: white; color: var(--purple); font-size: 18px; font-weight: bold; cursor: pointer; }
   .total-row { display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; margin: 12px 0; }
   input, textarea, select { width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 16px; margin-bottom: 10px; font-family: inherit; background: white; }
@@ -50,7 +56,10 @@
   .tab-bar button .icon { font-size: 20px; }
   .hidden { display: none !important; }
   .order-card { font-size: 14px; }
-  .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; font-size: 14px; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .order-item-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed #eee; font-size: 13px; gap: 8px; }
+  .order-item-row:last-child { border-bottom: none; }
+  .order-cat-label { display: inline-block; background: var(--purple-light); color: var(--purple); font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 6px; margin-left: 4px; }
+  .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; font-size: 14px; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none; max-width: 90%; text-align: center; }
   .toast.show { opacity: 1; }
   .empty { text-align: center; color: var(--muted); padding: 40px 0; }
 </style>
@@ -79,6 +88,12 @@
 
 <div id="tab-checkout" class="container hidden">
   <h2 style="font-size:18px;">📋 إتمام الطلب</h2>
+
+  <div class="card">
+    <h3 style="color:var(--purple);margin-top:0;font-size:15px;">🛒 ملخص الطلب</h3>
+    <div id="checkout-summary"></div>
+  </div>
+
   <div class="card">
     <label>الاسم الكامل *</label>
     <input id="cust-name" placeholder="مثال: محمد العلمي">
@@ -122,7 +137,7 @@
 
     <div class="card">
       <h3 style="color:var(--purple);margin-top:0;">➕ فقرة جديدة</h3>
-      <input id="new-cat-name" placeholder="اسم الفقرة (مثال: مواد غذائية)">
+      <input id="new-cat-name" placeholder="اسم الفقرة (مثال: بيتزا)">
       <input id="new-cat-img" placeholder="رابط صورة الفقرة (اختياري)">
       <button class="btn btn-block" onclick="addCategory()">إضافة فقرة</button>
     </div>
@@ -186,6 +201,7 @@ function switchTab(tab) {
   if (tab === 'shop') renderShop();
 }
 
+// ============ المتجر ============
 function renderShop() {
   const list = document.getElementById('categories-list');
   const empty = document.getElementById('empty-shop');
@@ -204,16 +220,27 @@ function renderShop() {
           <span style="color:var(--purple);font-size:20px;">▾</span>
         </div>
         <div class="products" id="prods-${cat.id}">
-          ${prods.length === 0 ? '<p class="empty" style="padding:16px 0;">لا توجد منتجات في هذه الفقرة</p>' : prods.map(p => `
+          ${prods.length === 0 ? '<p class="empty" style="padding:16px 0;">لا توجد منتجات في هذه الفقرة</p>' : prods.map(p => {
+            const inCart = data.cart.find(c => c.productId === p.id);
+            const inCartQty = inCart ? inCart.qty : 0;
+            const available = p.qty - inCartQty;
+            return `
             <div class="product">
-              ${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" onerror="this.style.display='none'">` : `<div style="width:64px;height:64px;border-radius:12px;background:var(--purple-light);display:flex;align-items:center;justify-content:center;font-size:24px;">📦</div>`}
+              ${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" onerror="this.style.display='none'">` : `<div style="width:64px;height:64px;border-radius:12px;background:var(--purple-light);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">📦</div>`}
               <div class="info">
+                <span class="cat-badge">📂 ${esc(cat.name)}</span>
                 <h4>${esc(p.name)}</h4>
                 <div class="price">${Number(p.price).toFixed(2)} د.ع</div>
+                <div class="product-actions">
+                  <button class="qty-mini" onclick="decShopQty('${p.id}')" ${available <= 0 ? 'disabled' : ''}>−</button>
+                  <span id="shop-qty-${p.id}" class="qty-display">1</span>
+                  <button class="qty-mini" onclick="incShopQty('${p.id}')" ${available <= 0 ? 'disabled' : ''}>+</button>
+                  <button class="btn btn-sm" onclick="addToCart('${p.id}')" ${available <= 0 ? 'disabled' : ''}>${available <= 0 ? 'نفد' : 'أضف'}</button>
+                </div>
               </div>
-              <button class="btn" onclick="addToCart('${p.id}')" ${p.qty <= 0 ? 'disabled' : ''}>أضف</button>
             </div>
-          `).join('')}
+            `;
+          }).join('')}
         </div>
       </div>
     `;
@@ -225,19 +252,58 @@ function toggleProducts(catId) {
   if (el) el.classList.toggle('open');
 }
 
+function incShopQty(prodId) {
+  const p = data.products.find(x => x.id === prodId);
+  const el = document.getElementById('shop-qty-' + prodId);
+  if (!p || !el) return;
+  const inCart = data.cart.find(c => c.productId === prodId);
+  const inCartQty = inCart ? inCart.qty : 0;
+  let current = parseInt(el.textContent) || 1;
+  if (current + inCartQty < p.qty) {
+    el.textContent = current + 1;
+  } else {
+    toast('الكمية المطلوبة تتجاوز المتوفر');
+  }
+}
+
+function decShopQty(prodId) {
+  const el = document.getElementById('shop-qty-' + prodId);
+  if (!el) return;
+  let current = parseInt(el.textContent) || 1;
+  if (current > 1) el.textContent = current - 1;
+}
+
+// ============ السلة ============
 function addToCart(prodId) {
   const p = data.products.find(x => x.id === prodId);
   if (!p || p.qty <= 0) return;
+
+  const el = document.getElementById('shop-qty-' + prodId);
+  const qty = el ? (parseInt(el.textContent) || 1) : 1;
+
+  const cat = data.categories.find(c => c.id === p.categoryId);
+  const categoryName = cat ? cat.name : '';
+
   const existing = data.cart.find(x => x.productId === prodId);
-  if (existing) {
-    if (existing.qty < p.qty) existing.qty++;
-    else { toast('الكمية المطلوبة تتجاوز المتوفر'); return; }
-  } else {
-    data.cart.push({ productId: prodId, qty: 1 });
+  const existingQty = existing ? existing.qty : 0;
+
+  if (existingQty + qty > p.qty) {
+    toast('الكمية المطلوبة تتجاوز المتوفر');
+    return;
   }
+
+  if (existing) {
+    existing.qty += qty;
+    existing.categoryName = categoryName;
+  } else {
+    data.cart.push({ productId: prodId, qty: qty, categoryName: categoryName });
+  }
+
+  if (el) el.textContent = '1';
   save();
   updateCartBadge();
-  toast('تمت إضافة ' + p.name);
+  renderShop();
+  toast('تمت إضافة ' + p.name + ' × ' + qty);
 }
 
 function updateCartBadge() {
@@ -262,10 +328,16 @@ function renderCart() {
   list.innerHTML = data.cart.map(item => {
     const p = data.products.find(x => x.id === item.productId);
     if (!p) return '';
+    const cat = data.categories.find(c => c.id === p.categoryId);
+    const catName = cat ? cat.name : (item.categoryName || '');
     total += p.price * item.qty;
     return `
       <div class="card cart-item">
-        <div><strong>${esc(p.name)}</strong><div style="font-size:13px;color:var(--muted);">${p.price.toFixed(2)} د.ع × ${item.qty}</div></div>
+        <div style="flex:1;min-width:0;">
+          ${catName ? `<span class="cat-badge">📂 ${esc(catName)}</span>` : ''}
+          <div><strong>${esc(p.name)}</strong></div>
+          <div style="font-size:13px;color:var(--muted);">${p.price.toFixed(2)} د.ع × ${item.qty}</div>
+        </div>
         <div class="qty-controls">
           <button onclick="decCart('${p.id}')">−</button>
           <span>${item.qty}</span>
@@ -292,6 +364,7 @@ function decCart(prodId) {
   save(); renderCart(); updateCartBadge();
 }
 
+// ============ الخريطة ============
 let map, marker, accuracyCircle;
 function toggleMap() {
   const cont = document.getElementById('map-container');
@@ -371,8 +444,41 @@ function locateMe() {
   );
 }
 
+// ============ إتمام الطلب ============
+function renderCheckoutSummary() {
+  const el = document.getElementById('checkout-summary');
+  if (!el) return;
+  if (data.cart.length === 0) {
+    el.innerHTML = '<p class="empty" style="padding:10px 0;">السلة فارغة</p>';
+    return;
+  }
+  let total = 0;
+  let html = '';
+  data.cart.forEach(item => {
+    const p = data.products.find(x => x.id === item.productId);
+    if (!p) return;
+    const cat = data.categories.find(c => c.id === p.categoryId);
+    const catName = cat ? cat.name : (item.categoryName || '');
+    total += p.price * item.qty;
+    html += `
+      <div class="order-item-row">
+        <div>
+          ${catName ? `<span class="order-cat-label">📂 ${esc(catName)}</span>` : ''}
+          <span>${esc(p.name)} × ${item.qty}</span>
+        </div>
+        <span style="color:var(--purple);font-weight:bold;">${(p.price*item.qty).toFixed(2)} د.ع</span>
+      </div>
+    `;
+  });
+  html += `<div style="display:flex;justify-content:space-between;border-top:1px solid #ddd;margin-top:8px;padding-top:8px;font-weight:bold;font-size:15px;">
+    <span>المجموع</span><span style="color:var(--purple);">${total.toFixed(2)} د.ع</span>
+  </div>`;
+  el.innerHTML = html;
+}
+
 function showCheckout() {
   if (data.cart.length === 0) { toast('السلة فارغة'); return; }
+  renderCheckoutSummary();
   switchTab('checkout');
   document.getElementById('order-success').classList.add('hidden');
 }
@@ -391,8 +497,10 @@ function submitOrder() {
   const items = data.cart.map(item => {
     const p = data.products.find(x => x.id === item.productId);
     if (!p) return null;
+    const cat = data.categories.find(c => c.id === p.categoryId);
+    const categoryName = cat ? cat.name : (item.categoryName || '');
     total += p.price * item.qty;
-    return { name: p.name, price: p.price, qty: item.qty };
+    return { name: p.name, price: p.price, qty: item.qty, categoryName: categoryName };
   }).filter(Boolean);
 
   const order = { id: uid(), customer: name, phone, address, notes, items, total, date: new Date().toISOString() };
@@ -423,7 +531,10 @@ function sendWhatsApp() {
   msg += `📍 العنوان:\n${mapsLink}\n`;
   if (o.notes) msg += `📝 ملاحظات: ${o.notes}\n`;
   msg += `\n*🛒 المنتجات:*\n`;
-  o.items.forEach(i => { msg += `• ${i.name} × ${i.qty} = ${(i.price * i.qty).toFixed(2)} د.ع\n`; });
+  o.items.forEach(i => {
+    const cat = i.categoryName ? `[${i.categoryName}] ` : '';
+    msg += `• ${cat}${i.name} × ${i.qty} = ${(i.price * i.qty).toFixed(2)} د.ع\n`;
+  });
   msg += `\n*💰 المجموع: ${o.total.toFixed(2)} د.ع*`;
   window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
 }
@@ -436,6 +547,7 @@ function resetToShop() {
   switchTab('shop');
 }
 
+// ============ الإدارة ============
 function isAdminLoggedIn() { return sessionStorage.getItem('alzahra_admin') === '1'; }
 function adminLogin() {
   const pass = document.getElementById('admin-pass').value;
@@ -470,12 +582,15 @@ function renderAdmin() {
   const ao = document.getElementById('admin-orders');
   ao.innerHTML = data.orders.length === 0
     ? '<p class="empty">لا توجد طلبات بعد</p>'
-    : data.orders.map(o => `
+    : data.orders.map(o => {
+      const catsInOrder = [...new Set(o.items.map(i => i.categoryName).filter(Boolean))];
+      const catsText = catsInOrder.length ? ' • 📂 ' + catsInOrder.join(' + ') : '';
+      return `
       <div class="card order-card" style="padding:12px;">
         <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="toggleOrder('${o.id}')">
-          <div>
+          <div style="flex:1;">
             <strong>${esc(o.customer)}</strong>
-            <div style="font-size:12px;color:var(--muted);">${esc(o.phone)} • ${o.items.length} منتج</div>
+            <div style="font-size:12px;color:var(--muted);">${esc(o.phone)} • ${o.items.length} منتج${catsText}</div>
           </div>
           <div style="text-align:left;">
             <span style="color:var(--purple);font-weight:bold;">${o.total.toFixed(2)} د.ع</span>
@@ -495,8 +610,14 @@ function renderAdmin() {
           </div>
           ${o.notes ? `<div style="font-size:13px;color:var(--muted);margin-bottom:8px;">📝 ${esc(o.notes)}</div>` : ''}
           <div style="background:#f7f7f9;padding:10px;border-radius:10px;font-size:13px;margin-bottom:8px;">
-            <strong>المنتجات:</strong>
-            ${o.items.map(it => `<div style="display:flex;justify-content:space-between;padding:4px 0;">${esc(it.name)} × ${it.qty} <span style="color:var(--purple);">${(it.price*it.qty).toFixed(2)} د.ع</span></div>`).join('')}
+            <strong>🛒 المنتجات:</strong>
+            ${o.items.map(it => `<div class="order-item-row">
+              <div>
+                ${it.categoryName ? `<span class="order-cat-label">📂 ${esc(it.categoryName)}</span>` : ''}
+                <span>${esc(it.name)} × ${it.qty}</span>
+              </div>
+              <span style="color:var(--purple);font-weight:bold;">${(it.price*it.qty).toFixed(2)} د.ع</span>
+            </div>`).join('')}
             <div style="display:flex;justify-content:space-between;border-top:1px solid #ddd;margin-top:6px;padding-top:6px;font-weight:bold;">
               <span>المجموع</span><span>${o.total.toFixed(2)} د.ع</span>
             </div>
@@ -505,7 +626,8 @@ function renderAdmin() {
           <button class="btn" style="background:#e53935;width:100%;padding:8px;font-size:12px;" onclick="deleteOrder('${o.id}')">🗑️ حذف الطلب</button>
         </div>
       </div>
-    `).join('');
+      `;
+    }).join('');
 }
 
 function toggleOrder(id) {
