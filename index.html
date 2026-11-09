@@ -31,174 +31,36 @@
     --radius: 16px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body {
-    margin: 0;
-    font-family: 'Cairo', -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    padding-bottom: 90px;
-    font-size: 16px;
-  }
-  /* ============ HEADER KFC STYLE ============ */
-  header {
-    background: var(--purple);
-    color: white;
-    padding: 20px 16px 18px;
-    text-align: center;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 3px 12px rgba(228,0,43,0.25);
-  }
+  body { margin: 0; font-family: 'Cairo', -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 90px; font-size: 16px; }
+  header { background: var(--purple); color: white; padding: 20px 16px 18px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 3px 12px rgba(228,0,43,0.25); }
   header h1 { margin: 0; font-size: 24px; font-weight: 900; letter-spacing: -0.5px; }
   header p { margin: 6px 0 0; font-size: 14px; font-weight: 600; opacity: 0.95; color: var(--yellow); }
   .container { padding: 12px; max-width: 600px; margin: 0 auto; }
   .card { background: var(--card); border-radius: var(--radius); padding: 15px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-
-  /* ============ CATEGORY PILLS ============ */
-  .category-pills {
-    display: flex;
-    overflow-x: auto;
-    gap: 8px;
-    padding: 4px 0 14px;
-    margin-bottom: 4px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    -webkit-overflow-scrolling: touch;
-  }
+  .category-pills { display: flex; overflow-x: auto; gap: 8px; padding: 4px 0 14px; margin-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
   .category-pills::-webkit-scrollbar { display: none; }
-  .cat-pill {
-    flex-shrink: 0;
-    padding: 9px 20px;
-    background: white;
-    color: var(--text);
-    border: 2px solid #e5e5e5;
-    border-radius: 30px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    white-space: nowrap;
-    font-family: inherit;
-    transition: all 0.15s;
-  }
-  .cat-pill.active {
-    background: var(--purple);
-    color: white;
-    border-color: var(--purple);
-    box-shadow: 0 3px 10px rgba(228,0,43,0.3);
-  }
+  .cat-pill { flex-shrink: 0; padding: 9px 20px; background: white; color: var(--text); border: 2px solid #e5e5e5; border-radius: 30px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit; transition: all 0.15s; }
+  .cat-pill.active { background: var(--purple); color: white; border-color: var(--purple); box-shadow: 0 3px 10px rgba(228,0,43,0.3); }
   .cat-pill:active { transform: scale(0.96); }
-
-  /* ============ PRODUCTS GRID KFC STYLE ============ */
-  .products-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    padding-bottom: 20px;
-  }
-  .product-card {
-    background: white;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.1s;
-  }
+  .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-bottom: 20px; }
+  .product-card { background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.07); display: flex; flex-direction: column; transition: transform 0.1s; }
   .product-card:active { transform: scale(0.98); }
-  .product-card-img {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-    background: #f5f5f5;
-    display: block;
-  }
-  .product-card-img-placeholder {
-    width: 100%;
-    aspect-ratio: 1;
-    background: linear-gradient(135deg, #FFF3E0 0%, #FFEBEE 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 44px;
-  }
-  .product-card-body {
-    padding: 10px 10px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    flex: 1;
-  }
-  .product-card-name {
-    font-size: 14px;
-    font-weight: 800;
-    color: var(--text);
-    line-height: 1.3;
-    min-height: 36px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .product-card-price {
-    font-size: 17px;
-    font-weight: 900;
-    color: var(--purple);
-    line-height: 1;
-    margin-bottom: 4px;
-  }
+  .product-card-img { width: 100%; aspect-ratio: 1; object-fit: cover; background: #f5f5f5; display: block; }
+  .product-card-img-placeholder { width: 100%; aspect-ratio: 1; background: linear-gradient(135deg, #FFF3E0 0%, #FFEBEE 100%); display: flex; align-items: center; justify-content: center; font-size: 44px; }
+  .product-card-body { padding: 10px 10px 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .product-card-name { font-size: 14px; font-weight: 800; color: var(--text); line-height: 1.3; min-height: 36px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .product-card-price { font-size: 17px; font-weight: 900; color: var(--purple); line-height: 1; margin-bottom: 4px; }
   .product-card-price .currency { font-size: 12px; font-weight: 700; opacity: 0.85; }
-  .product-card-actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 4px;
-    margin-top: auto;
-  }
-  .qty-mini-group {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    background: #f5f5f5;
-    border-radius: 20px;
-    padding: 2px;
-  }
-  .qty-btn {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    border: none;
-    background: white;
-    color: var(--purple);
-    font-size: 15px;
-    font-weight: 900;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-    font-family: inherit;
-  }
+  .product-card-actions { display: flex; align-items: center; justify-content: space-between; gap: 4px; margin-top: auto; }
+  .qty-mini-group { display: flex; align-items: center; gap: 2px; background: #f5f5f5; border-radius: 20px; padding: 2px; }
+  .qty-btn { width: 24px; height: 24px; border-radius: 50%; border: none; background: white; color: var(--purple); font-size: 15px; font-weight: 900; cursor: pointer; padding: 0; line-height: 1; box-shadow: 0 1px 3px rgba(0,0,0,0.12); font-family: inherit; }
   .qty-btn:disabled { color: #ccc; cursor: not-allowed; box-shadow: none; }
   .qty-btn:active:not(:disabled) { transform: scale(0.9); }
   .qty-num { min-width: 18px; text-align: center; font-size: 12px; font-weight: 800; }
-  .add-btn {
-    background: var(--purple);
-    color: white;
-    border: none;
-    border-radius: 18px;
-    padding: 6px 12px;
-    font-size: 12px;
-    font-weight: 800;
-    cursor: pointer;
-    font-family: inherit;
-    white-space: nowrap;
-    transition: all 0.15s;
-  }
+  .add-btn { background: var(--purple); color: white; border: none; border-radius: 18px; padding: 6px 12px; font-size: 12px; font-weight: 800; cursor: pointer; font-family: inherit; white-space: nowrap; transition: all 0.15s; }
   .add-btn:active:not(:disabled) { transform: scale(0.93); background: var(--purple-dark); }
   .add-btn:disabled { background: #ccc; cursor: not-allowed; }
   .add-btn.success { background: var(--green) !important; }
-
-  /* ============ GENERAL ============ */
   .btn { background: var(--purple); color: white; border: none; border-radius: 10px; padding: 9px 16px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; display: inline-block; }
   .btn:disabled { background: #ccc; }
   .btn-sm { padding: 7px 14px; font-size: 13px; }
@@ -247,17 +109,12 @@
   <p>توصيل سريع - بغداد</p>
 </header>
 
-<!-- ============ SHOP ============ -->
 <div id="tab-shop" class="container">
   <div id="category-pills" class="category-pills"></div>
   <div id="products-grid" class="products-grid"></div>
-  <div id="empty-shop" class="empty hidden">
-    🍽️ لا توجد فقرات بعد<br>
-    اذهب إلى تبويب "الإدارة" لإضافة فقرات ومنتجات
-  </div>
+  <div id="empty-shop" class="empty hidden">🍽️ لا توجد فقرات بعد<br>اذهب إلى تبويب "الإدارة" لإضافة فقرات ومنتجات</div>
 </div>
 
-<!-- ============ CART ============ -->
 <div id="tab-cart" class="container hidden">
   <h2 style="font-size:20px;">🛒 السلة</h2>
   <div id="cart-list"></div>
@@ -268,7 +125,6 @@
   </div>
 </div>
 
-<!-- ============ CHECKOUT ============ -->
 <div id="tab-checkout" class="container hidden">
   <h2 style="font-size:20px;">📋 إتمام الطلب</h2>
   <div class="card">
@@ -301,7 +157,6 @@
   </div>
 </div>
 
-<!-- ============ ADMIN ============ -->
 <div id="tab-admin" class="container hidden">
   <div id="admin-login">
     <h2 style="font-size:20px;">🔐 لوحة الإدارة</h2>
@@ -370,31 +225,29 @@
 
 <script>
 // ============================================
-// 1. Firebase Config — استبدل بالبيانات الخاصة بك
+// FIREBASE — بياناتك مدمجة هنا جاهزة
 // ============================================
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBB9GBPxQ7ru4HHcQQYDtoj51UbrJ36qss",
+  authDomain: "alzahra-store.firebaseapp.com",
+  projectId: "alzahra-store",
+  storageBucket: "alzahra-store.firebasestorage.app",
+  messagingSenderId: "896781817069",
+  appId: "1:896781817069:web:f4d7dca364653efbb9a8e4",
+  measurementId: "G-PD01TGBMTB"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 db.enablePersistence().catch(err => console.warn('offline:', err.code));
 
 // ============================================
-// 2. State
+// State
 // ============================================
 let data = { categories: [], products: [], orders: [], cart: [], lastOrderNumber: 0 };
 const ADMIN_PASS = 'admin123';
 let _pendingProductImage = null;
 let currentCategory = 'all';
 
-// ============================================
-// 3. Cart Local Storage
-// ============================================
 function loadCart() {
   const saved = localStorage.getItem('alzahra_cart');
   if (saved) { try { data.cart = JSON.parse(saved); } catch(e) { data.cart = []; } }
@@ -402,9 +255,6 @@ function loadCart() {
 }
 function saveCart() { localStorage.setItem('alzahra_cart', JSON.stringify(data.cart)); }
 
-// ============================================
-// 4. Migration
-// ============================================
 async function migrateLocalDataToFirestore() {
   const migrated = localStorage.getItem('alzahra_migrated_v1');
   if (migrated === 'yes') return;
@@ -436,9 +286,6 @@ async function migrateLocalDataToFirestore() {
   } catch(e) { console.error(e); }
 }
 
-// ============================================
-// 5. Real-time Listeners
-// ============================================
 function startRealtimeListeners() {
   db.collection('categories').onSnapshot(snap => {
     data.categories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -457,13 +304,10 @@ function startRealtimeListeners() {
   });
 }
 
-// ============================================
-// 6. Utilities
-// ============================================
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
+  setTimeout(() => t.classList.remove('show'), 2200);
 }
 function esc(s) { return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function enforceDigits(input, integerOnly) {
@@ -495,9 +339,6 @@ function switchTab(tab) {
   if (tab === 'shop') renderShop();
 }
 
-// ============================================
-// 7. SHOP — KFC-STYLE RENDER
-// ============================================
 function filterCategory(catId) {
   currentCategory = catId;
   renderShop();
@@ -510,29 +351,23 @@ function renderShop() {
   if (!pillsEl || !gridEl) return;
 
   if (data.categories.length === 0) {
-    pillsEl.innerHTML = '';
-    gridEl.innerHTML = '';
+    pillsEl.innerHTML = ''; gridEl.innerHTML = '';
     if (emptyEl) emptyEl.classList.remove('hidden');
     return;
   }
   if (emptyEl) emptyEl.classList.add('hidden');
 
-  // Reset currentCategory if it was deleted
   if (currentCategory !== 'all' && !data.categories.find(c => c.id === currentCategory)) {
     currentCategory = 'all';
   }
 
-  // Pills
   let pillsHtml = `<button class="cat-pill ${currentCategory === 'all' ? 'active' : ''}" onclick="filterCategory('all')">🍽️ الكل</button>`;
   data.categories.forEach(cat => {
     pillsHtml += `<button class="cat-pill ${currentCategory === cat.id ? 'active' : ''}" onclick="filterCategory('${cat.id}')">${esc(cat.name)}</button>`;
   });
   pillsEl.innerHTML = pillsHtml;
 
-  // Products
-  let products = currentCategory === 'all'
-    ? data.products.slice()
-    : data.products.filter(p => p.categoryId === currentCategory);
+  let products = currentCategory === 'all' ? data.products.slice() : data.products.filter(p => p.categoryId === currentCategory);
 
   if (products.length === 0) {
     gridEl.innerHTML = '<p class="empty" style="grid-column: 1 / -1;">لا توجد منتجات في هذه الفقرة</p>';
@@ -589,9 +424,6 @@ function decShopQty(prodId) {
   if (cur > 1) el.textContent = cur - 1;
 }
 
-// ============================================
-// 8. Cart
-// ============================================
 function addToCart(prodId, evt) {
   const p = data.products.find(x => x.id === prodId);
   if (!p || p.qty <= 0) return;
@@ -607,7 +439,6 @@ function addToCart(prodId, evt) {
   if (el) el.textContent = '1';
   saveCart(); updateCartBadge(); renderShop();
   toast('تمت إضافة ' + p.name + ' × ' + qty);
-  // Animate button
   if (evt && evt.target && evt.target.classList) {
     const btn = evt.target;
     const orig = btn.textContent;
@@ -676,9 +507,6 @@ function decCart(prodId) {
   saveCart(); renderCart(); updateCartBadge();
 }
 
-// ============================================
-// 9. Image Handling
-// ============================================
 function resizeImage(file, maxSize = 500, quality = 0.7) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -738,9 +566,6 @@ function clearPendingImage() {
   document.getElementById('img-preview').innerHTML = '';
 }
 
-// ============================================
-// 10. Map
-// ============================================
 let map, marker, accuracyCircle;
 function toggleMap() {
   const cont = document.getElementById('map-container');
@@ -784,17 +609,11 @@ function locateMe() {
       document.getElementById('cust-address').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
       toast('تم تحديد موقعك ✅');
     },
-    err => {
-      if (err.code === 1) toast('اسمح بالوصول للموقع');
-      else toast('تعذّر تحديد الموقع');
-    },
+    err => { if (err.code === 1) toast('اسمح بالوصول للموقع'); else toast('تعذّر تحديد الموقع'); },
     { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
   );
 }
 
-// ============================================
-// 11. Checkout
-// ============================================
 function renderCheckoutSummary() {
   const el = document.getElementById('checkout-summary');
   if (!el) return;
@@ -861,9 +680,6 @@ async function submitOrder() {
   }
 }
 
-// ============================================
-// 12. WhatsApp
-// ============================================
 function getMapsLink(address) {
   if (!address) return '';
   const m = String(address).match(/^(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)$/);
@@ -880,20 +696,17 @@ function resetToShop() {
   switchTab('shop');
 }
 
-// ============================================
-// 13. Admin
-// ============================================
-function isAdminLoggedIn() { return sessionStorage.getItem('alzahra_admin') === '1'; }
+function isAdminLoggedIn() { return localStorage.getItem('alzahra_admin') === '1'; }
 function adminLogin() {
   if (document.getElementById('admin-pass').value === ADMIN_PASS) {
-    sessionStorage.setItem('alzahra_admin', '1');
+    localStorage.setItem('alzahra_admin', '1');
     document.getElementById('admin-login').classList.add('hidden');
     document.getElementById('admin-panel').classList.remove('hidden');
     renderAdmin();
   } else toast('كلمة المرور خاطئة');
 }
 function adminLogout() {
-  sessionStorage.removeItem('alzahra_admin');
+  localStorage.removeItem('alzahra_admin');
   document.getElementById('admin-login').classList.remove('hidden');
   document.getElementById('admin-panel').classList.add('hidden');
 }
@@ -1004,12 +817,21 @@ async function addCategory() {
   const name = document.getElementById('new-cat-name').value.trim();
   const image = document.getElementById('new-cat-img').value.trim();
   if (!name) { toast('أدخل اسم الفقرة'); return; }
+  toast('⏳ جاري الإضافة...');
   try {
-    await db.collection('categories').add({ name, image: image || '' });
+    await db.collection('categories').add({ name, image: image || '', createdAt: new Date().toISOString() });
     document.getElementById('new-cat-name').value = '';
     document.getElementById('new-cat-img').value = '';
-    toast('تمت إضافة الفقرة');
-  } catch(e) { toast('فشل الإضافة'); }
+    toast('✅ تمت إضافة الفقرة');
+  } catch(e) {
+    console.error('Add category error:', e);
+    let msg = '❌ فشل الإضافة';
+    if (e.code === 'permission-denied') msg = '❌ صلاحيات Firestore مرفوضة - راجع Rules';
+    else if (e.code === 'unavailable') msg = '❌ تحقق من الاتصال';
+    else msg = '❌ ' + (e.message || e.code || 'خطأ غير معروف');
+    toast(msg);
+    alert('تفاصيل الخطأ:\n' + (e.code || '') + '\n' + (e.message || e));
+  }
 }
 async function deleteCategory(catId) {
   if (!confirm('حذف هذه الفقرة وكل منتجاتها؟')) return;
@@ -1031,19 +853,25 @@ async function addProduct() {
   if (!name) { toast('أدخل اسم المنتج'); return; }
   if (isNaN(price) || price < 0) { toast('أدخل سعرًا صحيحًا'); return; }
   if (isNaN(qty) || qty < 0) { toast('أدخل كمية صحيحة'); return; }
+  toast('⏳ جاري الإضافة...');
   try {
-    await db.collection('products').add({ categoryId: catId, name, price, qty, image });
+    await db.collection('products').add({ categoryId: catId, name, price, qty, image, createdAt: new Date().toISOString() });
     document.getElementById('prod-name').value = '';
     document.getElementById('prod-price').value = '';
     document.getElementById('prod-qty').value = '';
     clearPendingImage();
-    toast('تمت إضافة المنتج');
-  } catch(e) { toast('فشل الإضافة'); }
+    toast('✅ تمت إضافة المنتج');
+  } catch(e) {
+    console.error('Add product error:', e);
+    let msg = '❌ فشل الإضافة';
+    if (e.code === 'permission-denied') msg = '❌ صلاحيات Firestore مرفوضة';
+    else if (e.code === 'unavailable') msg = '❌ تحقق من الاتصال';
+    else msg = '❌ ' + (e.message || e.code || 'خطأ');
+    toast(msg);
+    alert('تفاصيل الخطأ:\n' + (e.code || '') + '\n' + (e.message || e));
+  }
 }
 
-// ============================================
-// 14. Init
-// ============================================
 async function init() {
   loadCart();
   updateCartBadge();
