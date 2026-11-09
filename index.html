@@ -147,7 +147,7 @@
     <label>ملاحظات إضافية للزون (اختياري)</label>
     <textarea id="cust-notes" rows="2" placeholder="أي تفاصيل إضافية..."></textarea>
   </div>
-  <button class="btn btn-block" onclick="submitOrder()">✅ تأكيد الطلب</button>
+  <button id="confirm-order-btn" class="btn btn-block" onclick="submitOrder()">✅ تأكيد الطلب</button>
   <div id="order-success" class="card hidden" style="text-align:center;margin-top:12px;">
     <div style="font-size:44px;">✅</div>
     <h3>تم تسجيل طلبك</h3>
@@ -225,7 +225,7 @@
 
 <script>
 // ============================================
-// FIREBASE — بياناتك مدمجة هنا جاهزة
+// Firebase Config
 // ============================================
 const firebaseConfig = {
   apiKey: "AIzaSyBB9GBPxQ7ru4HHcQQYDtoj51UbrJ36qss",
@@ -247,6 +247,7 @@ let data = { categories: [], products: [], orders: [], cart: [], lastOrderNumber
 const ADMIN_PASS = 'admin123';
 let _pendingProductImage = null;
 let currentCategory = 'all';
+let _submittingOrder = false;
 
 function loadCart() {
   const saved = localStorage.getItem('alzahra_cart');
@@ -636,7 +637,14 @@ function showCheckout() {
   switchTab('checkout');
   document.getElementById('order-success').classList.add('hidden');
 }
+
 async function submitOrder() {
+  // ✅ حماية من الضغط المتكرر
+  if (_submittingOrder) {
+    toast('⏳ الطلب قيد الإرسال، انتظر...');
+    return;
+  }
+
   const name = document.getElementById('cust-name').value.trim();
   const phone = document.getElementById('cust-phone').value.trim();
   const address = document.getElementById('cust-address').value.trim();
@@ -644,6 +652,17 @@ async function submitOrder() {
   if (!name) { toast('أدخل الاسم'); return; }
   if (!phone || phone.length < 8) { toast('أدخل رقم هاتف صحيح'); return; }
   if (!address) { toast('أدخل العنوان أو اختر موقعك على الخريطة'); return; }
+  if (data.cart.length === 0) { toast('السلة فارغة'); return; }
+
+  // ✅ تعطيل الزر فورًا
+  _submittingOrder = true;
+  const btn = document.getElementById('confirm-order-btn');
+  const origText = btn ? btn.textContent : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '⏳ جاري إرسال الطلب...';
+    btn.style.opacity = '0.7';
+  }
 
   let total = 0;
   const items = data.cart.map(item => {
@@ -673,10 +692,18 @@ async function submitOrder() {
     saveCart(); updateCartBadge(); renderCart();
     document.getElementById('order-num-display').textContent = `رقم طلبك: #${num}`;
     document.getElementById('order-success').classList.remove('hidden');
-    toast('تم تسجيل الطلب #' + num);
+    toast('✅ تم تسجيل الطلب #' + num);
+    // نُبقي الزر معطلًا — الطلب تم بنجاح
   } catch(e) {
     console.error(e);
-    toast('فشل حفظ الطلب، تحقق من الاتصال');
+    toast('❌ فشل حفظ الطلب، تحقق من الاتصال');
+    // إعادة تفعيل الزر فقط عند الفشل
+    _submittingOrder = false;
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = origText || '✅ تأكيد الطلب';
+      btn.style.opacity = '1';
+    }
   }
 }
 
@@ -693,6 +720,14 @@ function sendWhatsApp() {
 }
 function resetToShop() {
   ['cust-name','cust-phone','cust-address','cust-notes'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  // إعادة تفعيل زر الطلب للطلب القادم
+  _submittingOrder = false;
+  const btn = document.getElementById('confirm-order-btn');
+  if (btn) {
+    btn.disabled = false;
+    btn.textContent = '✅ تأكيد الطلب';
+    btn.style.opacity = '1';
+  }
   switchTab('shop');
 }
 
